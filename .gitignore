@@ -1,2 +1,4 @@
 # ignore R Project files
 *.Rproj*
+# ignore generated html
+*.html
