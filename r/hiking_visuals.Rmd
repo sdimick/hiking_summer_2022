@@ -1,0 +1,6 @@
+---
+title: "Hiking Visuals"
+output: html_notebook
+---
+
+Oh yeah, gonna plot some plots.
