@@ -4,3 +4,24 @@ output: html_notebook
 ---
 
 Oh yeah, gonna plot some plots.
+
+```{r libs, results='hide', warning=FALSE, message=FALSE}
+library(tidyverse)
+library(cowplot)
+library(gpx)
+```
+
+```{r read_data}
+df1 <- read_gpx("../data/little_si.gpx")
+```
+
+```{r}
+df2 <- df1$tracks$`Little Si`
+```
+
+```{r}
+df2 %>% 
+  ggplot(aes(x = Time, y = Elevation)) +
+  geom_line()
+```
+
