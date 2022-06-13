@@ -2,5 +2,6 @@
 *.Rproj*
 .DS_Store
 .Rhistory
+.RData
 # ignore generated html
 *.html
