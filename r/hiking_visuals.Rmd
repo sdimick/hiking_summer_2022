@@ -110,6 +110,12 @@ df4 %>%
     y = "Elevation Gain (feet)",
     x = "Duration (minutes)"
   )
+
+ggsave(
+  filename = "test_plot_01.png",
+  device = "png",
+  path = "../images"
+)
 ```
 
 ```{r}
@@ -128,12 +134,6 @@ df4 %>%
     y = "Elevation (feet)",
     x = "Time of Day"
   )
-
-ggsave(
-  filename = "test_plot_01.png",
-  device = "png",
-  path = "../images"
-)
 ```
 
 ```{r}
