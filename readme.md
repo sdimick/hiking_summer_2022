@@ -8,6 +8,6 @@ Planned Hikes: [Google Sheet](https://docs.google.com/spreadsheets/d/1-LZD7FF370
 
 ## First Data Test
 
-First little plot from first two hikes off the list:
+First test plot from first two hikes off the list:
 
 ![](images/test_plot_01.png)
