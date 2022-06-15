@@ -22,6 +22,211 @@ df2 <- df1$tracks$`Little Si`
 ```{r}
 df2 %>% 
   ggplot(aes(x = Time, y = Elevation)) +
-  geom_line()
+  geom_line() +
+  theme_minimal() +
+  theme(
+    panel.border = element_rect(color = 'gray20', fill = NA)
+  ) +
+  labs(
+    title = "Little Si",
+    y = "Elevation (meters)"
+  )
 ```
+
+```{r}
+df3 <- read_gpx("../data/cedar_butte.gpx")$tracks$`Cedar Butte`
+```
+
+```{r}
+df3 %>% 
+  ggplot(aes(x = Time, y = Elevation)) +
+  geom_line() +
+  theme_minimal() +
+  theme(
+    panel.border = element_rect(color = 'gray20', fill = NA)
+  ) +
+  labs(
+    title = "Cedar Butte",
+    y = "Elevation (meters)"
+  )
+```
+
+```{r}
+df4 <- bind_rows(
+  df2 %>% mutate(hike = 'Little Si'),
+  df3 %>% mutate(hike = 'Cedar Butte')
+)
+```
+
+```{r}
+df4 %>% 
+  ggplot(aes(x = Time, y = Elevation, color = hike)) +
+  geom_line() +
+  theme_minimal() +
+  theme(
+    panel.border = element_rect(color = 'gray20', fill = NA)
+  ) +
+  labs(
+    y = "Elevation (meters)"
+  )
+```
+
+```{r}
+df4 %>% 
+  group_by(hike) %>% 
+  mutate(start_time = min(Time)) %>% 
+  ungroup() %>% 
+  mutate(duration = Time - start_time) %>% 
+  ggplot(aes(x = duration, y = Elevation, color = hike)) +
+  geom_line() +
+  theme_minimal() +
+  theme(
+    panel.border = element_rect(color = 'gray20', fill = NA)
+  ) +
+  labs(
+    y = "Elevation (meters)"
+  )
+```
+
+```{r}
+df4 %>% 
+  group_by(hike) %>% 
+  mutate(
+    start_time = min(Time),
+    start_elevation = Elevation[which.min(Time)]
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    duration = as.numeric(Time - start_time) / 60,
+    elevation_gain = (Elevation - start_elevation) * 3.28084
+  ) %>% 
+  ggplot(aes(x = duration, y = elevation_gain, color = hike)) +
+  geom_line() +
+  theme_minimal() +
+  theme(
+    panel.border = element_rect(color = 'gray20', fill = NA)
+  ) +
+  labs(
+    y = "Elevation Gain (feet)",
+    x = "Duration (minutes)"
+  )
+```
+
+```{r}
+df4 %>% 
+  mutate(
+    time_of_day = hms::as_hms(Time),
+    elevation_feet = Elevation * 3.28084
+  ) %>% 
+  ggplot(aes(x = time_of_day, y = elevation_feet, color = hike)) +
+  geom_line() +
+  theme_minimal() +
+  theme(
+    panel.border = element_rect(color = 'gray20', fill = NA)
+  ) +
+  labs(
+    y = "Elevation (feet)",
+    x = "Time of Day"
+  )
+
+ggsave(
+  filename = "test_plot_01.png",
+  device = "png",
+  path = "../images"
+)
+```
+
+```{r}
+df4 %>% 
+  group_by(hike) %>% 
+  mutate(
+    start_time = min(Time),
+    start_elevation = Elevation[which.min(Time)]
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    duration = as.numeric(Time - start_time) / 60,
+    elevation_gain = (Elevation - start_elevation) * 3.28084,
+    time_of_day = hms::as_hms(with_tz(Time, "US/Pacific")),
+    elevation_feet = Elevation * 3.28084
+  ) %>% 
+  ggplot(aes(x = time_of_day, y = elevation_gain)) +
+  geom_line() +
+  theme_minimal() +
+  theme(
+    panel.border = element_rect(color = 'gray20', fill = NA)
+  ) +
+  labs(
+    y = "Elevation Gain (feet)",
+    x = "Time of Day"
+  ) +
+  facet_grid(
+    cols = vars(hike),
+    scales = "free_x"
+  )
+```
+
+```{r}
+df4 %>% 
+  group_by(hike) %>% 
+  mutate(
+    start_time = min(Time),
+    start_elevation = Elevation[which.min(Time)]
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    duration = as.numeric(Time - start_time) / 60,
+    elevation_gain = (Elevation - start_elevation) * 3.28084,
+    time_of_day = hms::as_hms(with_tz(Time, "US/Pacific")),
+    elevation_feet = Elevation * 3.28084
+  ) %>% 
+  ggplot(aes(x = time_of_day, y = elevation_gain)) +
+  geom_line() +
+  theme_minimal() +
+  theme(
+    panel.border = element_rect(color = 'gray20', fill = NA)
+  ) +
+  labs(
+    y = "Elevation Gain (feet)",
+    x = "Time of Day"
+  ) +
+  facet_grid(
+    rows = vars(hike),
+    scales = "free_y"
+  )
+```
+```{r}
+df4 %>% 
+  group_by(hike) %>% 
+  mutate(
+    start_time = min(Time),
+    start_elevation = Elevation[which.min(Time)]
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    duration = as.numeric(Time - start_time) / 60,
+    elevation_gain = (Elevation - start_elevation) * 3.28084,
+    time_of_day = hms::as_hms(with_tz(Time, "US/Pacific")),
+    elevation_feet = Elevation * 3.28084
+  ) %>% 
+  ggplot(aes(x = time_of_day, y = elevation_feet)) +
+  geom_line() +
+  theme_minimal() +
+  theme(
+    panel.border = element_rect(color = 'gray20', fill = NA)
+  ) +
+  labs(
+    y = "Elevation (feet)",
+    x = "Time of Day"
+  ) +
+  facet_grid(
+    cols = vars(hike),
+    scales = "free_x"
+  )
+```
+
+```{r}
+getwd()
+```
+
 
